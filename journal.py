@@ -23,7 +23,6 @@ from pathlib import Path
 
 JOURNAL_FILE = Path.home() / ".journal.json"
 DATE_FMT = "%Y-%m-%d"
-DISPLAY_FMT = "%A, %B %-d %Y"
 
 
 # ── storage ──────────────────────────────────────────────────────────────────
@@ -60,13 +59,14 @@ def today_key() -> str:
     return datetime.now().strftime(DATE_FMT)
 
 def fmt_date(key: str) -> str:
-    return datetime.strptime(key, DATE_FMT).strftime(DISPLAY_FMT)
+    d = datetime.strptime(key, DATE_FMT)
+    return d.strftime("%A, %B ") + str(d.day) + d.strftime(" %Y")
 
 def word_count(text: str) -> int:
     return len(text.split()) if text.strip() else 0
 
 def open_in_editor(initial: str = "") -> str:
-    editor = os.environ.get("EDITOR", "nano")
+    editor = os.environ.get("EDITOR", "notepad")
     with tempfile.NamedTemporaryFile(suffix=".md", mode="w", delete=False) as f:
         f.write(initial)
         fname = f.name
